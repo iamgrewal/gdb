@@ -1,0 +1,238 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.graphstack.gdb.packager</groupId>
+        <artifactId>packager</artifactId>
+        <version>3.5.26-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <groupId>io.graphstack.gdb.packager</groupId>
+    <artifactId>gdb-plugin</artifactId>
+    <packaging>pom</packaging>
+
+    <name>GraphStack.io GDB Plugin</name>
+
+    <version>3.5.26-SNAPSHOT</version>
+
+    <description>
+    </description>
+
+
+    <modules>
+
+    </modules>
+
+    <properties>
+
+    </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-auth-plugin-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-backup</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-causal-clustering</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-cluster</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-com</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-cypher-compiled-expressions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-enterprise-cypher</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-cypher-morsel-runtime</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-cypher-physical-planning</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-cypher-slotted-runtime</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- End Cypher -->
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-deferred-locks</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-ha</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-enterprise-kernel</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-management</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-metrics</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-enterprise</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-query-logging</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-security-enterprise</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.graphstack.gdb.app</groupId>
+            <artifactId>neo4j-server-enterprise</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+
+                <executions>
+                    <execution>
+                        <id>build-shaded-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <artifactId>maven-shade-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <configuration>
+
+                    <artifactSet>
+                        <includes>
+                            <include>io.graphstack.gdb:*</include>
+                            <include>io.graphstack.gdb.app:*</include>
+
+                            <!-- EE deps -->
+                            <include>org.ow2.asm:asm</include>
+                            <include>org.ow2.asm:asm-util</include>
+                            <include>org.ow2.asm:asm-analysis</include>
+                            <include>org.ow2.asm:asm-tree</include>
+
+                            <include>commons-beanutils:commons-beanutils</include>
+                            <include>commons-collections:commons-collections</include>
+
+                            <include>com.hazelcast:hazelcast-all</include>
+                            <include>org.eclipse.jetty:jetty-client</include>
+                            <include>jline:jline</include>
+                            <include>org.bitbucket.inkytonik.kiama:kiama_2.11
+                            </include> <!-- Has exclusions  org.bitbucket.inkytonik.dsinfo:dsinfo_2.11   org.bitbucket.inkytonik.dsprofile:dsprofile_2.11 com.google.guava:guava  com.google.code.findbugs:jsr305  -->
+                            <include>net.jpountz.lz4:lz4</include>
+                            <include>io.dropwizard.metrics:metrics-core</include>
+                            <include>io.dropwizard.metrics:metrics-graphite</include><!-- Has exclusions  com.rabbitmq:amqp-client-->
+                            <include>io.netty:netty</include>
+                            <include>org.rogach:scallop_2.11</include>
+                            <include>org.apache.shiro:shiro-cache</include>
+                            <include>org.apache.shiro:shiro-config-core</include>
+                            <include>org.apache.shiro:shiro-config-ogdl</include>
+                            <include>org.apache.shiro:shiro-core</include>
+                            <include>org.apache.shiro:shiro-crypto-cipher</include>
+                            <include>org.apache.shiro:shiro-crypto-core</include>
+                            <include>org.apache.shiro:shiro-crypto-hash</include>
+                            <include>org.apache.shiro:shiro-event</include>
+                            <include>org.apache.shiro:shiro-lang</include>
+
+
+                            <include>io.prometheus:simpleclient</include>
+                            <include>io.prometheus:simpleclient_httpserver</include>
+                            <include>io.prometheus:simpleclient_dropwizard</include>
+                            <include>io.prometheus:simpleclient_common</include>
+
+                            <include>org.slf4j:slf4j-nop</include>
+                            <include>org.slf4j:slf4j-api</include>
+                            <include>com.typesafe:config</include>
+                            <include>com.typesafe:ssl-config-core</include>
+                            <include>org.agrona:agrona</include>
+
+
+                        </includes>
+                    </artifactSet>
+
+                    <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                    </transformers>
+                    <!--
+                      <finalName>gdb-ee-plugin</finalName>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedClassifierName>jackofall</shadedClassifierName> 
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <profiles>
+
+    </profiles>
+</project>

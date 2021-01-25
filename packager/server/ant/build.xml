@@ -1,0 +1,12 @@
+<project default="extract-shell-zip">
+  <property name="shell.dir" location="../../../neo4j/community/cypher-shell/cypher-shell/target"/>
+  <property name="shell.zip" location="${shell.dir}/cypher-shell-${project.version}.zip"/>
+  <target name="find-shell-zip" description="Find shell file.">
+    <available file="${shell.zip}" property="zip.present"/>
+    <echo>Does cypher shell located at: ${shell.zip} exist?  ${zip.present}</echo>
+  </target>
+  <target name="extract-shell-zip" depends="find-shell-zip" if="zip.present">
+    <echo>Extracting cypher shell to distribution...</echo>
+    <unzip src="${shell.zip}" dest="src/main/distribution"/>
+  </target>
+</project>

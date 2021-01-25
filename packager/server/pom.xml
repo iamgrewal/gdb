@@ -1,0 +1,255 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.graphstack.gdb.packager</groupId>
+        <artifactId>packager</artifactId>
+        <version>3.5.26-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <groupId>io.graphstack.gdb.packager</groupId>
+    <artifactId>server</artifactId>
+    <packaging>pom</packaging>
+
+    <name>GraphStack.io GDB Server Packager</name>
+
+    <version>3.5.26-SNAPSHOT</version>
+
+    <description>
+        Packages the GraphStack.io GDB Server distribution.
+    </description>
+
+
+    <properties>
+        <neo4j.version>${project.version}</neo4j.version>
+        <gdb-browser.version>4.2.0</gdb-browser.version>
+        <gdb-browser-groupId>io.graphstack.gdb.client</gdb-browser-groupId>
+        <gdb-browser-artifactId>gdb-browser</gdb-browser-artifactId>
+
+        <org.neo4j.webservice.packages>org.neo4j.rest.web</org.neo4j.webservice.packages>
+        <default.https.port>7473</default.https.port>
+        <default.http.port>7474</default.http.port>
+
+
+
+        <neo4j.home>${project.build.directory}/neo4j</neo4j.home>
+        <neo4j.confdir>${neo4j.home}/conf</neo4j.confdir>
+        <neo4j.datadir>${neo4j.home}/data</neo4j.datadir>
+        <neo4j.logdir>${neo4j.datadir}/log</neo4j.logdir>
+
+        <skip.shell.tests>false</skip.shell.tests>
+        <license-text.header>headers/AGPL-3-header.txt</license-text.header>
+    </properties>
+
+
+    <build>
+        <plugins>
+            <plugin>
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <id>copy-shell</id>
+                        <configuration>
+                            <target>
+                                <ant antfile="${project.basedir}/ant/build.xml" inheritRefs="true"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.neo4j.build.plugins</groupId>
+                <artifactId>licensing-maven-plugin</artifactId>
+
+                <executions>
+                    <execution>
+                        <id>list-all-licenses</id>
+                        <configuration>
+                            <licensingRequirementFiles combine.children="append">
+                                <licensingRequirementFile>licensing/licensing-requirements-browser.xml</licensingRequirementFile>
+                            </licensingRequirementFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <prependText>licensing/notice-agpl-prefix.txt</prependText>
+                    <excludedGroups>^((org.neo4j){1}|(org.neo4j.app){1}|(org.neo4j.server.plugin){1}|(org.neo4j.assembly){1})$</excludedGroups>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>properties/document.properties</file>
+                                <file>properties/permalinks.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <appendAssemblyId>true</appendAssemblyId>
+                    <attach>false</attach>
+                    <finalName>graphstack-gdb-${project.version}</finalName>
+                    <outputDirectory>${project.parent.build.directory}</outputDirectory>
+                    <delimiters>
+                        <delimiter>#{*}</delimiter>
+                    </delimiters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>unix-build</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assemblies/unix-build.xml</descriptor>
+                            </descriptors>
+                            <filters>
+                                <filter>properties/tarball.properties</filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>windows-build</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assemblies/windows-build.xml</descriptor>
+                            </descriptors>
+                            <filters>
+                                <filter>properties/zip.properties</filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>get-javadoc-sources</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.neo4j.build.plugins</groupId>
+                <artifactId>licensing-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>list-all-licenses-win</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <licensingRequirementFiles>
+                                <licensingRequirementFile>licensing/licensing-requirements-browser.xml</licensingRequirementFile>
+                            </licensingRequirementFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+
+
+        <dependency>
+            <groupId>org.neo4j.build</groupId>
+            <artifactId>build-resources</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>${gdb-browser-groupId}</groupId>
+            <artifactId>${gdb-browser-artifactId}</artifactId>
+            <version>${gdb-browser.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.graphstack.gdb</groupId>
+            <artifactId>neo4j-enterprise</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.graphstack.gdb.app</groupId>
+            <artifactId>neo4j-server-enterprise</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-cypher-expression-evaluator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-import-tool</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>disable-shell-script-tests</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <skip.shell.tests>true</skip.shell.tests>
+            </properties>
+        </profile>
+        <profile>
+            <id>skip-shell-script-tests</id>
+            <activation>
+                <property>
+                    <name>skipTests</name>
+                </property>
+            </activation>
+            <properties>
+                <skip.shell.tests>true</skip.shell.tests>
+            </properties>
+        </profile>
+    </profiles>
+</project>

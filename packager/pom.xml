@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+	    <groupId>io.graphstack.gdb</groupId>
+	    <artifactId>gdb-parent</artifactId>
+        <version>3.5.26-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.graphstack.gdb.packager</groupId>
+    <artifactId>packager</artifactId>
+    <version>3.5.26-SNAPSHOT</version>
+
+    <name>GraphStack.io GDB Packager</name>
+    <packaging>pom</packaging>
+    <description>Packages enterprise standalone server and enterprise plugin that can be dropped into Neo4j Community distributions to super charge it with enterprise features.</description>
+
+    <properties>
+        <license-text.header>headers/AGPL-3-header.txt</license-text.header>
+        <neo4j.mainClass>org.neo4j.server.enterprise.EnterpriseEntryPoint</neo4j.mainClass>
+    </properties>
+
+    <modules>
+        <module>server</module>
+        <module>plugin</module>
+    </modules>
+
+</project>
